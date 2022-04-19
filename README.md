@@ -2,9 +2,9 @@
 Current Version：touchmap_2.0.3kord_arm64.deb
 
 # Description
-This deb package is used to slove the multiscreen touching problem.
- -support the hot-plugging action
- -support the touch pen device mapping
+This deb package is used to slove the multiscreen touching problem.  
+ -support the hot-plugging action  
+ -support the touch pen device mapping  
 
 # 安装步骤
 1, 该包在安装时需要先卸载低版本的包，执行“sudo dpkg -P touchmap”即可。该包有两个
