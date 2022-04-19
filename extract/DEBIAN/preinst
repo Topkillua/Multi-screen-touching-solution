@@ -1,0 +1,16 @@
+#!/bin/bash
+
+screen_path="/var/screen"
+
+mkdir $screen_path
+
+chmod 777 $screen_path
+
+log_path="/var/screen/screen.log"
+screenmap_path="/var/screen/screenmap"
+
+touch $log_path
+touch $screenmap_path
+
+screenall="/var/screen/*"
+chmod 777 $screenall

@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#执行初始化的过程，按照文件恢复设置
+
+log_path="/var/screen/screen.log"
+screenmap_path="/var/screen/screenmap"
+
+sleep 1
+
+echo $(date)"usb插拔 log如下***********************" >> $log_path
+echo " " >> $log_path
+xinput >> $log_path
+echo " " >> $log_path
+xrandr >> $log_path
+echo " " >> $log_path
+
+
+while read LINE
+    do
+		tmp1=`echo $LINE | cut -d ' ' -f 1`
+		tmp2=`echo $LINE | cut -d ' ' -f 2`
+		echo "设备是:"$tmp1 >> $log_path
+		echo "屏幕是:"$tmp2 >> $log_path
+
+		touchdev_id_change=0
+		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+        do
+			echo "判断的触摸设备id是"$touch_id >> $log_path
+            input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
+			echo "该id对应的dev_input是" $input_dev >> $log_path
+            touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN")
+			echo "该dev_input对应的touch_screen是" $touch_screen  >> $log_path
+            if [ "$touch_screen" == "" ];then
+				echo "该触摸设备id对应的touch_screen是空，判断下一个触摸设备" >> $log_path
+                continue
+            fi
+            dev=$(udevadm info $input_dev | grep "ID_SERIAL=" | cut -d "=" -f 2)
+			echo "该触摸设备id对应的dev是" $dev >> $log_path
+            if [ "$tmp1" == "$dev" ];then
+				echo "该触摸设备id对应的设备与文件记录相同，故将该id设备映射到该屏幕" >> $log_path
+                touchdev_id_change=$touch_id
+				break
+            fi
+        done
+
+		echo "执行的id是"$touchdev_id_change >> $log_path
+		echo "执行的屏幕是"$tmp2 >> $log_path
+        xinput map-to-output $touchdev_id_change $tmp2
+
+		if [ $? = 0 ];then
+			echo $(date)"remap生效" >> $log_path
+		else
+			echo $(date)"remap未生效" >> $log_path
+		fi
+
+	done < $screenmap_path
+
+	xinput >> $log_path
+	echo " " >> $log_path
+	xrandr >> $log_path
+	echo " " >> $log_path
+	echo $(date)"usb插拔 log结束***********************" >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path
+	echo " " >> $log_path

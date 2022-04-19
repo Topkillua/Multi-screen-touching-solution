@@ -1,0 +1,11 @@
+Package: touchmap
+Version: 2.0.23ord
+Architecture: arm64
+Maintainer: zhangpeng <zhangpeng1@kylinos.cn>
+Installed-Size: 54
+Depends: xinput, python3-pyudev (>= 0.21)
+Section: admin
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: set touchmap for screen
+	 	Pen and tablet input updated

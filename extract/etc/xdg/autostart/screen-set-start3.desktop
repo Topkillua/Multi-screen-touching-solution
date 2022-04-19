@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+GenericName[zh_CN]=开机屏幕自动映射3次
+Name=zidongyingshe3ci
+Name[zh_CN]=开机屏幕自动映射3次
+Exec=/var/screen/screen-start3 

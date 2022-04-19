@@ -1,0 +1,9 @@
+ACTION=="add",SUBSYSTEM=="hid",DRIVERS=="hid-multitouch", RUN += "/usr/bin/python3 /usr/bin/screen.py %k add"
+
+# ACTION=="remove",SUBSYSTEM=="hid", RUN += "/usr/bin/python3 /home/kylin/test.py %k %n %p %b $name remove"
+
+ACTION=="change",SUBSYSTEM=="hid",DRIVERS=="hid-multitouch", RUN += "/usr/bin/python3 /usr/bin/screen.py %k change"
+
+#ACTION=="bind",SUBSYSTEM=="hid",DRIVERS=="hid-multitouch", RUN += "/usr/bin/python3 /home/kylin/test.py %k bind"
+
+# ACTION=="unbind",SUBSYSTEM=="hid",DRIVERS=="hid-generic", RUN += "/usr/bin/python3 /home/kylin/test.py %k %n %p %b $name unbind"

@@ -1,0 +1,12 @@
+9097ab2f36bf8b8d2442238fb5b74e46  usr/bin/remap-touchmap
+62e3ba4b75380323566c6c1215ac866e  usr/bin/screen.py
+af2d9043fe0f74889f3d24cbf3dd9f88  usr/bin/touchmap-udev.py
+5b901ffda0ca077884a71f7f4596855f  usr/share/applications/screen-set.desktop
+f08897c368357c818f6790a16a6e3236  usr/share/doc/touchmap/README.Debian
+f6b86a2b4112c28f9a3190a42654948d  usr/share/doc/touchmap/changelog.gz
+b43cd6ce75055dd6e2cc143f3c99886c  usr/share/doc/touchmap/copyright
+1b3970a1fd159fb774ba99e78c567296  var/screen/screen-setup
+3aeb2f3eb24e6fc07b4131e969e40693  var/screen/screen-start
+b1743cd3cecb76bfb62eb25cd8cdc0a1  var/screen/screen-start2
+cbfc857e68118c49798e10458e71c822  var/screen/screen-start3
+5ef6b007ab766364399aa69e3b657993  var/screen/screen-time

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+GenericName[zh_CN]=开机屏幕自动映射
+Name=zidongyingshe
+Name[zh_CN]=开机屏幕自动映射
+Exec=/var/screen/screen-start 

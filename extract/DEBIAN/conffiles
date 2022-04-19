@@ -1,0 +1,5 @@
+/etc/udev/rules.d/10-screen.rules
+/etc/xdg/autostart/screen-set-start.desktop
+/etc/xdg/autostart/screen-set-start2.desktop
+/etc/xdg/autostart/screen-set-start3.desktop
+/etc/xdg/autostart/touchmap-udev.desktop

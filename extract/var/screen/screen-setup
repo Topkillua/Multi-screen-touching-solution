@@ -1,0 +1,193 @@
+#!/bin/bash
+
+log_path="/var/screen/screen.log"
+screenmap_path="/var/screen/screenmap"
+
+T0="zenity --info --title="屏幕触摸设置""
+T1="--text="请点击要设置的屏幕""
+T2="--ok-label="退出""
+T3="--extra-button="
+T4="--ok-label="返回""
+T5="--text="请选择与屏幕映射的触摸设备""
+
+update_xinputmapout()
+{
+	while read LINE
+    do
+        tmp1=`echo $LINE | cut -d ' ' -f 1`
+        tmp2=`echo $LINE | cut -d ' ' -f 2`
+		#echo "更新映射关系的设备是"$tmp1 >> $log_path
+		#echo "更新映射关系的屏幕是"$tmp2 >> $log_path
+
+		touchdev_id_change=0
+		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+		do
+			input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
+        	touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
+        	if [ "$touch_screen" == "" ];then
+            	continue
+        	fi
+            dev=$(udevadm info $input_dev | grep "ID_SERIAL=" | cut -d "=" -f 2)
+			if [ "$tmp1" == "$dev" ];then
+				touchdev_id_change=$touch_id
+			fi
+	    done
+        
+		xinput map-to-output $touchdev_id_change $tmp2
+		if [ $? = 0 ];then
+			echo "更新映射关系生效" >> $log_path
+		else
+			echo "更新映射关系未生效" >> $log_path
+		fi
+    done < $screenmap_path
+}
+
+
+update_screenmap()
+{
+	update_count=1
+	res=0
+	while read LINE1
+    do
+        tmp=`echo $LINE1 | cut -d ' ' -f 2`
+        if [ $select_screen = $tmp ];then
+            res=$update_count
+			break
+        fi
+		let update_count++
+    done < $screenmap_path
+	sed -i "${res}c $select_touchdev $select_screen" $screenmap_path
+	update_xinputmapout
+}
+
+
+select_touchdev()
+{
+	touchdev_count=0
+
+	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+	do
+		input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
+		touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
+		if [ "$touch_screen" == "" ];then
+			continue
+		fi
+			let touchdev_count++
+	done
+
+	count_tmp=0
+	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+    	do
+		input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
+		touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
+		if [ "$touch_screen" == "" ];then
+			continue
+		fi
+			dev=$(udevadm info $input_dev | grep "ID_SERIAL=" | cut -d "=" -f 2)
+			let count_tmp++
+
+			if [ $count_tmp = 1 ];then
+				dev_bt1=$dev
+			elif [ $count_tmp = 2 ];then
+				dev_bt2=$dev
+			elif [ $count_tmp = 3 ];then
+				dev_bt3=$dev
+			elif [ $count_tmp = 4 ];then
+				dev_bt4=$dev
+			else
+				echo "连接的触摸设备的数量超出程序范围(最大连接数量4)" >> $log_path
+			fi
+  	done
+
+	case $touchdev_count in
+	0) echo "没有触摸设备连接" >> $log_path
+   	;;  
+   	1) select_touchdev=`$T0 $T5 $T3$dev_bt1 $T4`
+   	;;  
+  	2) select_touchdev=`$T0 $T5 $T3$dev_bt1 $T3$dev_bt2 $T4`
+    ;;  
+   	3) select_touchdev=`$T0 $T5 $T3$dev_bt1 $T3$dev_bt2 $T3$dev_bt3 $T4`
+   	;;
+	4) select_touchdev=`$T0 $T5 $T3$dev_bt1 $T3$dev_bt2 $T3$dev_bt3 $T3$dev_bt4 $T4`
+	;;
+   	*) echo "连接触摸设备的数量超出范围（最大连接数量4）" >> $log_path
+    ;;
+    esac
+
+    if [ "$select_touchdev" = "" ];then
+       	#break
+		echo "return"
+   	else
+       	update_screenmap
+   	fi
+}
+
+init_screenmap()
+{
+	for screen_connect in $(xrandr | grep " connected" | cut -d ' ' -f 1)
+	do
+		sign=0
+		while read LINE
+        do
+            screen_tmp=`echo $LINE | cut -d ' ' -f 2`
+            if [ "$screen_tmp" == "$screen_connect" ];then
+                sign=1
+                break
+            fi 
+        done < $screenmap_path
+
+        if [ $sign = 0 ];then
+            echo "0 $screen_connect" >> $screenmap_path
+        fi
+	done
+}
+
+
+while [ 1 ]
+do
+	init_screenmap
+	screen_count=$(cat $screenmap_path | wc -l)
+	button_count=1
+	while read LINE
+	do
+		L_LINE=`echo $LINE | cut -d ' ' -f 2`
+		case $button_count in
+		1) bt1=$L_LINE
+		;;
+		2) bt2=$L_LINE
+		;;
+		3) bt3=$L_LINE
+		;;
+		4) bt4=$L_LINE
+		;;
+		*) echo "连接屏幕的数量超出程序范围(最大连接数量4)" >> $log_path
+			exit 1
+		;;
+		esac
+		let button_count++ 
+	done < $screenmap_path
+	
+	case $screen_count in
+	0) echo "没有屏幕连接" >> $log_path
+	;;
+	1) select_screen=`$T0 $T1 $T2 $T3$bt1 $T2`
+	;;
+	2) select_screen=`$T0 $T1 $T2 $T3$bt1 $T3$bt2 $T2`
+	;;
+	3) select_screen=`$T0 $T1 $T2 $T3$bt1 $T3$bt2 $T3$bt3 $T2`
+	;;
+	4) select_screen=`$T0 $T1 $T2 $T3$bt1 $T3$bt2 $T3$bt3 $T3$bt4 $T2`
+	;;
+	*) echo "连接屏幕的数量超出程序范围(最大连接数量4)" >> $log_path
+	   exit 1
+	;; 
+	esac
+
+	if [ "$select_screen" = "" ];then
+		#echo "程序结束" >> $log_path
+		break
+	else
+		select_touchdev
+	fi
+done
+

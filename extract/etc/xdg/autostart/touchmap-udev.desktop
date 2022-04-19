@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=udev-touchmap
+Comment=monitor for touch
+Exec=/usr/bin/touchmap-udev.py
+Terminal=false
+Type=Application
+NoDisplay=true

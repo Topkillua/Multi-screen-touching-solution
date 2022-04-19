@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+GenericName[zh_CN]=屏幕触摸设置
+Name=screen set touch
+Name[zh_CN]=屏幕触摸设置
+Exec=/var/screen/screen-setup 
