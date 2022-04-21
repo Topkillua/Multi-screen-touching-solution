@@ -20,7 +20,7 @@ update_xinputmapout()
 		#echo "更新映射关系的屏幕是"$tmp2 >> $log_path
 
 		touchdev_id_change=0
-		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen|Tablet' | cut -d '=' -f 2 | cut -f 1)
 		do
 			input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
         	touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
@@ -65,7 +65,7 @@ select_touchdev()
 {
 	touchdev_count=0
 
-	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen|Tablet' | cut -d '=' -f 2 | cut -f 1)
 	do
 		input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
 		touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
@@ -76,7 +76,7 @@ select_touchdev()
 	done
 
 	count_tmp=0
-	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+	for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen|Tablet' | cut -d '=' -f 2 | cut -f 1)
     	do
 		input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
 		touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")

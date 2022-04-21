@@ -38,7 +38,7 @@ while read LINE
 		echo "屏幕是:"$tmp2 >> $log_path
 
 		touchdev_id_change=0
-		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen' | cut -d '=' -f 2 | cut -f 1)
+		for touch_id in $(xinput | grep -i -E 'touch|ILITEK|Pen|Tablet' | cut -d '=' -f 2 | cut -f 1)
         do
 			echo "判断的触摸设备id是"$touch_id >> $log_path
             input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
