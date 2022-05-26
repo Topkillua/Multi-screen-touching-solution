@@ -1,7 +1,7 @@
 Package: touchmap
-Version: 2.0.5kord
-Architecture: arm64
-Maintainer: zhangpeng <zhangpeng1@kylinos.cn>
+Version: 2.0.6kord
+Architecture: amd64
+Maintainer: zoutao <zoutao@kylinos.cn>
 Installed-Size: 54
 Depends: xinput, python3-pyudev (>= 0.21)
 Section: admin

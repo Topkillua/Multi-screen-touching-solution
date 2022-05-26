@@ -6,7 +6,6 @@ log_path="/var/screen/screen.log"
 screenmap_path="/var/screen/screenmap"
 screen_time="/var/screen/screen-time"
 
-sh /var/screen/check_config.sh
 delay_time=2
 	while read LINE1
     	do
@@ -138,6 +137,7 @@ while read LINE
         echo "执行的id是"$touchdev_id_change >> $log_path
         echo "执行的屏幕是"$tmp2 >> $log_path
         xinput map-to-output $touchdev_id_change $tmp2
+
         if [ $? = 0 ];then
             echo $(date)"开机生效" >> $log_path
         else
