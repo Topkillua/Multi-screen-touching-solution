@@ -18,15 +18,17 @@ do
         fi
 	if [ "${configNode}" ]&&[ "${configId}" ]&&[ "${configName}" ];then
 		touch_screen=$(udevadm info $configNode | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
-		echo $touch_screen
-		touch_id=$(xinput | grep $configId | grep "$configName")
-		echo $touch_id
-        	if [ "$touch_screen" == "" ]||[ "$touch_id" == "" ];then
+		touch_id_info=$(xinput | grep $configId | grep "$configName")
+		configName_b=${configName//" "/"_"}
+		touch_name=$(udevadm info $configNode | grep "$configName_b" )
+        	if [ "$touch_screen" == "" ]||[ "$touch_id_info" == "" ]||[ "$touch_name" == "" ];then
                 	echo "bad solution for this screen, automatication comparasion tried"
                 	for touch_id in $(xinput | grep -i -E "$configName" | cut -d '=' -f 2 | cut -f 1)
                 	do
                         	input_dev=$(xinput list-props $touch_id | grep "Device Node" | awk -F : '{print $2}' | awk -F \" '{print $2}' | awk '{print $1}')
+				echo $input_dev
                         	touch_screen=$(udevadm info $input_dev | grep "ID_INPUT_TOUCHSCREEN\|ID_INPUT_TABLET")
+				echo $touch_screen
                         	if [ "$touch_screen" == "" ];then
                                 	continue
                         	fi
