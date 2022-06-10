@@ -41,8 +41,8 @@ do
                         touch_node_change_list[change_num+2]=$input_dev
 			echo "Id change: ($configId) --- ($touch_id)"
 			touch_id_change_list[change_num]=$lineCount
-			touch_id_change_list[change_num+1]=$configId
-			touch_id_change_list[change_num+2]=$touch_id		
+			touch_id_change_list[change_num]=$configId
+			touch_id_change_list[change_num+1]=$touch_id		
 			let change_num+=3
                 	done
         	fi
@@ -65,8 +65,7 @@ do
 	echo $tmp
 	echo $tmp1
         echo $tmp2
-	let lineTmp=${touch_id_change_list[count]}-1
-	sed -i "${lineTmp}s/$tmp1/$tmp2/" $usr_config_path
+	sed -i "${tmp-1}s/$tmp1/$tmp2" $usr_config_path
 	tmp="line="${touch_node_change_list[count]}
 	tmp1="devnode="${touch_node_change_list[count+1]}
 	tmp2="devnode="${touch_node_change_list[count+2]}
@@ -75,8 +74,7 @@ do
 	echo $tmp
 	echo $tmp1
 	echo $tmp2
-	let lineTmp=${touch_node_change_list[count]}-2
-	sed -i "${lineTmp}s/$tmp1/$tmp2/" $usr_config_path
+	sed -i "${tmp-2}s/$tmp1/$tmp2" $usr_config_path
 	let count+=3
 done
 unset touch_node_change_list touch_id_change_list change_num count

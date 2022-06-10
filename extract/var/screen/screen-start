@@ -6,7 +6,7 @@ log_path="/var/screen/screen.log"
 screenmap_path="/var/screen/screenmap"
 screen_time="/var/screen/screen-time"
 
-sh /var/screen/check_config.sh
+/var/screen/check_config.sh
 delay_time=2
 	while read LINE1
     	do

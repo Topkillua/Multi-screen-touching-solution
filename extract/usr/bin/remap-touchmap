@@ -6,6 +6,7 @@ log_path="/var/screen/screen.log"
 screenmap_path="/var/screen/screenmap"
 
 sleep 1
+/var/screen/check_config.sh
 
 echo $(date)"usb插拔 log如下***********************" >> $log_path
 echo " " >> $log_path
